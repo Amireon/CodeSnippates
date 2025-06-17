@@ -2,6 +2,7 @@ import logging
 import os
 import time
 import sys
+from typing import Optional
 
 
 class Logger(object):
@@ -25,16 +26,19 @@ class Logger(object):
         'crit': logging.CRITICAL
     }
     
-    def __init__(self, level: str = "debug"):
+    def __init__(self,
+                 level: str = "debug",
+                 name: Optional[str] = None):
         """
         level: str, 日志级别, 可选值有: ['debug', 'info', 'warning', 'error', crit']
         """
 
         if level not in self.level_map:
-                raise ValueError(f"Invalid log level: {level}. Expected one of: {list(self.level_map.keys())}")
+            raise ValueError(f"Invalid log level: {level}. Expected one of: {list(self.level_map.keys())}")
         
         self.level = self.level_map[level]
-        self.logger = logging.getLogger()
+        self.name = name
+        self.logger = logging.getLogger(self.name) if self.name is not None else logging.getLogger()
 
         # 设置日志的默认级别
         self.logger.setLevel(self.level)
